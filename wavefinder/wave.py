@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.signal import hilbert
+import scipy.integrate as integrate
 
 
 pi = np.pi
