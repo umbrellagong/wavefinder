@@ -71,22 +71,18 @@ class LinearRandomWave():
         W = np.atleast_2d(np.arange(1, self.num_mode + 1)).T
         
         if t is None:
-            Z = np.tile(np.linspace(0, self.period, num_points, endpoint=False), 
-                    (self.num_mode, 1))
-            temp = self.Amplitude * np.cos(W*Z*self.base + self.random_phase)
-            elevation = np.sum(temp, axis=0)
-            envelope = np.abs(hilbert(elevation))
-            if whether_envelope:
-                return elevation, envelope
-            else:
-                return elevation
+            t = np.linspace(0, self.period, num_points, endpoint=False)
+
+        temp = self.Amplitude * np.cos(W*t*self.base + self.random_phase)
         
-        else:
-            temp = self.Amplitude * np.cos(W*t*self.base + self.random_phase)
-            if np.size(t) != 1:
-                return np.sum(temp, axis = 0)
+        if np.size(t) != 1:
+            elev = np.sum(temp, axis=0)
+            if whether_envelope:
+                return elev, np.abs(hilbert(elev))
             else:
-                return np.sum(temp)
+                return elev
+        else:
+            return np.sum(temp)
 
     def _spectrum_gaussian(self, W, alpha, wp, gamma):
         '''
